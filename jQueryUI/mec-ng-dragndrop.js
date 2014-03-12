@@ -55,13 +55,15 @@ angular.module('mec-dragndrop-directives',['ngSanitize'])
       			scope.placeholder = false;
       
       			// transclusion - compile the content of the draggable with correct scope in order to apply any directives within
-	      		transFn(scope,function(clone,innerScope){
+	      		/*transFn(scope,function(clone,innerScope){
 			        // compile transcluded content
         			var dummy = angular.element('<div></div>');
 		    	    dummy.append($compile(clone)(innerScope));
         			scope.obj.content = dummy.html();
 			        dummy = null;
-			    }); // end transFn
+			    }); // end transFn*/ // no longer needed transclusion happens before the link function
+			    
+			    scope.obj.content = el.html();
       	
 				if(angular.isDefined(attrs.id)) // save id if defined
         			scope.obj.id = attrs.id;
@@ -79,7 +81,7 @@ angular.module('mec-dragndrop-directives',['ngSanitize'])
       
 	      		// event handlers
     	  		var evts = {
-        			start : function(evt,ui){
+    	  			start : function(evt,ui){
           				if(scope.placeholder) // ui.helper is jQuery object
             				ui.helper.wrap('<div class="dragging-placeholder"></div>');
           	
