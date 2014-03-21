@@ -36,7 +36,7 @@ angular.module('angled-resizeit-directives',[])
 	 * 		* angled.resizable.reset.height - expects object {id: I}
 	 * 		* angled.resizable.reset.width - expects object {id: I}
 	 */
-	.directive('angledResizable',[function(){
+	.directive('angledResizable',['$timeout',function($timeout){
 		return {
 			restrict : 'A',
 			link : function(scope,el,attrs){
@@ -60,10 +60,12 @@ angular.module('angled-resizeit-directives',[])
 				// set up events object
 				var evts = {
 					create : function(evt,ui){
-						scope.$apply(function(){
-							scope.obj.originalSize = angular.copy(ui.size);
-							scope.obj.size = angular.copy(ui.size);
-							scope.$emit('angled.resizable.create',{obj: scope.obj});
+						$timeout(function(){
+							scope.$apply(function(){
+								scope.obj.originalSize = angular.copy(ui.size);
+								scope.obj.size = angular.copy(ui.size);
+								scope.$emit('angled.resizable.create',{obj: scope.obj});
+							});
 						});
 					}, // end create
 					

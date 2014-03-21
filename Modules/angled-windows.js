@@ -24,7 +24,7 @@ angular.module('angled-windows-directives',['ngAnimate','angled-dragndrop','angl
 			restrict : 'E',
 			transclude : true,
 			replace : true,
-			templateUrl : 'tmpls/window',
+			templateUrl : '/tmpls/window',
 			scope : {
 				id : '@id',
 				title : '@title'
