@@ -27,7 +27,7 @@ angular.module('angled-windows-directives',['ngAnimate','angled-dragndrop','angl
 			templateUrl : 'tmpls/window',
 			scope : {
 				id : '@id',
-				title : '@title
+				title : '@title'
 			},
 			link : function(scope,el,attrs){
 				scope.rolledUp = false;
