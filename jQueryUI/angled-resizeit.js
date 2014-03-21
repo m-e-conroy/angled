@@ -55,7 +55,7 @@ angular.module('angled-resizeit-directives',[])
 					scope.obj.id = attrs.id;
 					
 				// get jQuery UI options via the directive's attribute value
-				var opts = (angular.isDefined(attrs.angledResizeable)) ? scope.$eval(attrs.angledResizeable) : {};
+				var opts = (angular.isDefined(attrs.angledResizable)) ? scope.$eval(attrs.angledResizable) : {};
 				
 				// set up events object
 				var evts = {
