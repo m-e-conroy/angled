@@ -35,10 +35,10 @@ div#windowBodyContent { overflow: scroll; }
   transition: max-height .4s ease;
 }
 
-.floating-window.minimize, .floating-window.minimize-add.minimize-add-active, .floating-window.minimize-remove{
+.floating-window.rolled-up, .floating-window.rolled-up-add.rolled-up-add-active, .floating-window.rolled-up-remove{
   max-height: 46px;
 }
 
-.floating-window.minimize-add, .floating-window.minimize-remove.minimize-remove-active {
+.floating-window.rolled-up-add, .floating-window.rolled-up-remove.rolled-up-remove-active {
   max-height: 1000px;
 }
