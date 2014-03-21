@@ -1,0 +1,44 @@
+.floating-window, div#windowBodyContent, div#windowBody, .floating-window > .panel  { /* fix for sudden margins when using resizeable with bootstrap */
+  -webkit-box-sizing: content-box; /* Safari/Chrome, other WebKit */
+	-moz-box-sizing: content-box;    /* Firefox, other Gecko */
+	box-sizing: content-box;         /* Opera/IE 8+ */
+}
+
+.floating-window > .panel {
+  min-height: 135px;
+  min-width: 250px;
+}
+div#windowBodyContent {
+  min-height: 18px;
+  min-width: 220px;
+}
+.floating-window > .panel {
+  width: 300px;
+}
+
+/** Appropriate mouse cursors **/
+.cursor-move { cursor: move; }
+
+/** Hide content falling outside of window **/
+.panel { overflow: hidden; }
+
+/** Scroll window content when necessary **/
+div#windowBodyContent { overflow: scroll; }
+
+/** Window minimize and expansion transition **/
+.floating-window {
+  max-height: 1000px;
+  overflow: hidden;
+  webkit-transition: max-height .4s ease;
+  -moz-transition: max-height .4s ease;
+  -o-transition: height .4s ease;
+  transition: max-height .4s ease;
+}
+
+.floating-window.minimize, .floating-window.minimize-add.minimize-add-active, .floating-window.minimize-remove{
+  max-height: 46px;
+}
+
+.floating-window.minimize-add, .floating-window.minimize-remove.minimize-remove-active {
+  max-height: 1000px;
+}
