@@ -7,13 +7,11 @@
 .floating-window > .panel {
   min-height: 135px;
   min-width: 250px;
+  width: 300px;
 }
 div#windowBodyContent {
   min-height: 18px;
   min-width: 220px;
-}
-.floating-window > .panel {
-  width: 300px;
 }
 
 /** Appropriate mouse cursors **/
