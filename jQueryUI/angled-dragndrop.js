@@ -180,15 +180,14 @@ angular.module('angled-dragndrop-directives',['angled-dragndrop-services'])
 	.directive('angledDroppable',['angledDndSrv',function(angledDndSrv){
 		return {
 			restrict : 'A',
-			scope : {},
 			link : function(scope,el,attrs){
-				scope.obj = {
+				var _obj = {
 					id : null,
 					dropped : [] // list of items dropped on droppable
 				};
 				
 				if(angular.isDefined(attrs.id)) // save id if defined
-					scope.obj.id = attrs.id;
+					_obj.id = attrs.id;
 					
 				// setup the options object to pass to jQuery UI's draggable method
 				var opts = (angular.isDefined(attrs.angledDroppable)) ? scope.$eval(attrs.angledDroppable) : {};
@@ -199,16 +198,16 @@ angular.module('angled-dragndrop-directives',['angled-dragndrop-services'])
 							// get the object draggalbe object being dropped and push a copy onto the droppable's array
 							var _dropped = angledDndSrv.getDraggable();
 							if(angular.isDefined(_dropped) && !angular.equals(_dropped,null))
-								scope.obj.dropped.push(angular.copy());
+								_obj.dropped.push(angular.copy());
 							angledDndSrv.clean();
 
-							scope.$emit('angled.droppable.dropped',{obj: scope.obj});
+							scope.$emit('angled.droppable.dropped',{obj: _obj});
 						});
 					}, // end drop
 
 					over : function(evt,ui){
 						scope.$apply(function(){
-							scope.$emit('angled.droppable.over',{id: scope.obj.id});
+							scope.$emit('angled.droppable.over',{id: _obj.id});
 						});
 					} // end over
 				}; // end evts
