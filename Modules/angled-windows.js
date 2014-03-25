@@ -19,9 +19,9 @@
  * 			* this library: Modules/css/angled-windows.css
  */
 
-angular.module('angled-windows-directives',['ngAnimate','angled-dragndrop','angled-resizeit'])
+angular.module('angled-windows-directives',['ngSanitize','ngAnimate','angled-dragndrop','angled-resizeit'])
 
-	.directive('angledWindow',['$animate',function($animate){
+	.directive('angledWindow',['$animate','$sanitize',function($animate,$sanitize){
 		return {
 			restrict : 'E',
 			transclude : true,
