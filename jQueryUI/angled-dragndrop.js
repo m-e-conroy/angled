@@ -1,10 +1,69 @@
 /**
+ * Angled Drag N Drop Services
+ *
+ * A service to act as the communication pipe between draggable and droppable
+ * elements.  The service will save the current object being dragged and return
+ * that object when requested, such as when a droppable area requests it because
+ * it has detected a "drop" event.
+ *
+ * @author: Michael E Conroy (michael.e.conroy@gmail.com)
+ *		- http://codepen.io/m-e-conroy
+ * @date: 25 Mar 2014
+ *
+ */
+angular.module('angled-dragndrop-services',[])
+
+	.factory('angledDndSrv', [function(){
+
+		//== Variables ==//
+
+		var _draggable = null; // saved draggable object
+
+		//== Methods ==//
+
+		return {
+			/**
+			 * Set Draggable
+			 * Saves the given draggable object.
+			 *
+			 * @param		obj
+			 */
+			setDraggable : function(obj){
+				if(angular.isDefined(obj))
+					_draggable = obj;
+			}, // end setDraggable
+
+			/**
+			 * Get Draggable
+			 * Retrieves the saved draggable object.
+			 */
+			getDraggable : function(){
+				if(angular.isDefined(_draggable))
+					return _draggable;
+				else
+					return null;
+			}, // end getDraggable
+
+			/**
+			 * Clean
+			 * Clean up the service by resetting the saved draggable object to null.
+			 */
+			clean : function(){
+				_draggable = null;
+			} // end clean
+		}; // end return
+
+	}]); // end angledDndSrv / angled-dragndrop-services
+
+
+/**
  * Angled Drag N Drop
  * 
  * Angular directives to perform drag and drop functions with the help of 
  * jQuery UI.
  * 
  * @author: Michael E Conroy (michael.e.conroy@gmail.com)
+ *		- http://codepen.io/m-e-conroy
  * @date: 12 Mar 2014
  * 
  * @require
@@ -12,7 +71,7 @@
  * 		* jQuery UI 1.10.x
  *  
  */
-angular.module('angled-dragndrop-directives',[])
+angular.module('angled-dragndrop-directives',['angled-dragndrop-services'])
 
 	/**
 	 *	Angled Draggable
@@ -34,12 +93,11 @@ angular.module('angled-dragndrop-directives',[])
      *	
      *	Place Holder CSS Class: .dragging-placeholder
 	 */
-	.directive('angledDraggable',[function(){
+	.directive('angledDraggable',['angledDndSrv',function(angledDndSrv){
 		return {
     		restrict : 'A',
+    		scope : {},
 		    link : function(scope,el,attrs){
-		    	scope.minimized = false;
-		    	
 		    	// draggable object properties
 		      	scope.obj = {
 		        	id : null,
@@ -47,7 +105,7 @@ angular.module('angled-dragndrop-directives',[])
         			associate : null,
 		        	group : null
 		      	};
-      			scope.placeholder = false;
+      			var placeholder = false;
 			    
 			    //=== Setup ===//
 			    
@@ -60,7 +118,7 @@ angular.module('angled-dragndrop-directives',[])
       				scope.obj.associate = attrs.associate;
       				
 	      		if(angular.isDefined(attrs.placeholder)) // set whether or not to show the place holder upon dragging the element
-    	    		scope.placeholder = scope.$eval(attrs.placeholder);
+    	    		placeholder = scope.$eval(attrs.placeholder);
       
       			// options for jQuery UI's draggable method
       			var opts = (angular.isDefined(attrs.angledDraggable)) ? scope.$eval(attrs.angledDraggable) : {};
@@ -73,10 +131,11 @@ angular.module('angled-dragndrop-directives',[])
 	      		// event handlers
     	  		var evts = {
     	  			start : function(evt,ui){
-          				if(scope.placeholder) // ui.helper is jQuery object
+          				if(placeholder) // ui.helper is jQuery object
             				ui.helper.wrap('<div class="angled-draggable-placeholder"></div>');
           	
-						scope.$apply(function(){ // emit event in angular context, send object with event
+						scope.$apply(function(){ // broadcast event in angular context, send object with event
+							angledDndSrv.setDraggable(scope.obj);
             				scope.$emit('angled.draggable.started',{obj: scope.obj});
           				}); // end $apply
 	        		}, // end start
@@ -88,7 +147,7 @@ angular.module('angled-dragndrop-directives',[])
         			}, // end drag
         
 	        		stop : function(evt,ui){
-    	      			if(scope.placeholder)
+    	      			if(placeholder)
         	    			ui.helper.unwrap();
           
           				scope.$apply(function(){ // emit event in angular context
@@ -99,10 +158,9 @@ angular.module('angled-dragndrop-directives',[])
       
 	      		// combine options and events
     	  		var options = angular.extend({},opts,evts);
-      			el.draggable(options); // make element draggable
-    		} // end link
+      			el.draggable(options); // jQuery UI call
   		}; // end return
-	}]) // end draggable
+	}]) // end angledDraggable
 
 	/**
 	 * Angled Droppable
@@ -117,9 +175,10 @@ angular.module('angled-dragndrop-directives',[])
 	 * Events Emitted:
 	 *  	* angled.droppable.dropped (sends droppable's scope.obj object)
 	 */
-	.directive('angledDroppable',[function(){
+	.directive('angledDroppable',['angledDndSrv',function(angledDndSrv){
 		return {
 			restrict : 'A',
+			scope : {},
 			link : function(scope,el,attrs){
 				scope.obj = {
 					id : null,
@@ -131,21 +190,30 @@ angular.module('angled-dragndrop-directives',[])
 					
 				// setup the options object to pass to jQuery UI's draggable method
 				var opts = (angular.isDefined(attrs.angledDroppable)) ? scope.$eval(attrs.angledDroppable) : {};
-				
+
 				var evts = {
 					drop : function(evt,ui){ // apply scope context
 						scope.$apply(function(){
-							scope.obj.dropped.push(angular.copy(scope.$parent.obj));
+							// get the object draggalbe object being dropped and push a copy onto the droppable's array
+							scope.obj.dropped.push(angular.copy(angledDndSrv.getDraggable()));
+							angledDndSrv.clean();
+
 							scope.$emit('angled.droppable.dropped',{obj: scope.obj});
 						});
-					}
+					}, // end drop
+
+					over : function(evt,ui){
+						scope.$apply(function(){
+							scope.$emit('angled.droppable.over')
+						});
+					} // end over
 				}; // end evts
 				
 				var options = angular.extend({},opts,evts);
-				el.droppable(options);
+				el.droppable(options); // jQuery UI call
 			} // end link
 		}; // end return
-	}]); // end droppable
+	}]); // end angledDroppable
 	
 // declare main module
 angular.module('angled-dragndrop',['angled-dragndrop-directives']);

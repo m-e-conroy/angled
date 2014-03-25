@@ -39,6 +39,7 @@ angular.module('angled-resizeit-directives',[])
 	.directive('angledResizable',['$timeout',function($timeout){
 		return {
 			restrict : 'A',
+			scope : {},
 			link : function(scope,el,attrs){
 				scope.obj = {
 					el : null,
@@ -90,7 +91,7 @@ angular.module('angled-resizeit-directives',[])
 				}; // end evts
 				
 				var options = angular.extend({},opts,evts);
-				el.resizable(options);
+				el.resizable(options); // jQuery UI call
 				
 				//=== Listeners ===//
 				
