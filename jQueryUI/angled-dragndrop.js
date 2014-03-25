@@ -98,10 +98,9 @@ angular.module('angled-dragndrop-directives',['angled-dragndrop-services'])
 	.directive('angledDraggable',['angledDndSrv',function(angledDndSrv){
 		return {
     		restrict : 'A',
-    		scope : {},
 		    link : function(scope,el,attrs){
 		    	// draggable object properties
-		      	scope.obj = {
+		      	var _obj = {
 		        	id : null,
         			content : '',
         			associate : null,
@@ -111,13 +110,13 @@ angular.module('angled-dragndrop-directives',['angled-dragndrop-services'])
 			    
 			    //=== Setup ===//
 			    
-			    scope.obj.content = el.html(); // save object content
+			    _obj.content = el.html(); // save object content
       	
 				if(angular.isDefined(attrs.id)) // save id if defined
-        			scope.obj.id = attrs.id;
+        			_obj.id = attrs.id;
       			
       			if(angular.isDefined(attrs.associate)) // save associated object
-      				scope.obj.associate = attrs.associate;
+      				_obj.associate = attrs.associate;
       				
 	      		if(angular.isDefined(attrs.placeholder)) // set whether or not to show the place holder upon dragging the element
     	    		placeholder = scope.$eval(attrs.placeholder);
@@ -126,7 +125,7 @@ angular.module('angled-dragndrop-directives',['angled-dragndrop-services'])
       			var opts = (angular.isDefined(attrs.angledDraggable)) ? scope.$eval(attrs.angledDraggable) : {};
       
 				if(angular.isDefined(attrs.group)){ // identify the draggable group if there is one
-    	    		scope.obj.group = attrs.group;
+    	    		_obj.group = attrs.group;
         			opts.stack = '.' + attrs.group;
       			}
       
@@ -137,8 +136,8 @@ angular.module('angled-dragndrop-directives',['angled-dragndrop-services'])
             				ui.helper.wrap('<div class="angled-draggable-placeholder"></div>');
           	
 						scope.$apply(function(){ // broadcast event in angular context, send object with event
-							angledDndSrv.setDraggable(scope.obj);
-            				scope.$emit('angled.draggable.started',{obj: scope.obj});
+							angledDndSrv.setDraggable(_obj);
+            				scope.$emit('angled.draggable.started',{obj: _obj});
           				}); // end $apply
 	        		}, // end start
         

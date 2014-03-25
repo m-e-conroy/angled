@@ -4,6 +4,7 @@
  * Angular directives to enable resizing of an object with the help of jQuery UI.
  * 
  * @author: Michael E Conroy (michael.e.conroy@gmail.com)
+ *		- http://codepen.io/m-e-conroy
  * @date: 21 Mar 2014
  * 
  * @require
@@ -39,9 +40,8 @@ angular.module('angled-resizeit-directives',[])
 	.directive('angledResizable',['$timeout',function($timeout){
 		return {
 			restrict : 'A',
-			scope : {},
 			link : function(scope,el,attrs){
-				scope.obj = {
+				var _obj = {
 					el : null,
 					id : null,
 					originalSize : null, // {width,height}
@@ -50,10 +50,10 @@ angular.module('angled-resizeit-directives',[])
 				
 				//=== Setup ===//
 				
-				scope.obj.el = el;
+				_obj.el = el; // save the handle to the resizable element
 				
 				if(angular.isDefined(attrs.id))
-					scope.obj.id = attrs.id;
+					_obj.id = attrs.id;
 					
 				// get jQuery UI options via the directive's attribute value
 				var opts = (angular.isDefined(attrs.angledResizable)) ? scope.$eval(attrs.angledResizable) : {};
@@ -63,23 +63,23 @@ angular.module('angled-resizeit-directives',[])
 					create : function(evt,ui){
 						$timeout(function(){
 							scope.$apply(function(){
-								scope.obj.originalSize = angular.copy(ui.size);
-								scope.obj.size = angular.copy(ui.size);
-								scope.$emit('angled.resizable.create',{obj: scope.obj});
+								_obj.originalSize = angular.copy(ui.size);
+								_obj.size = angular.copy(ui.size);
+								scope.$emit('angled.resizable.create',{obj: _obj});
 							});
 						});
 					}, // end create
 					
 					start : function(evt,ui){
 						scope.$apply(function(){
-							scope.$emit('angled.resizable.start',{obj: scope.obj});
+							scope.$emit('angled.resizable.start',{obj: _obj});
 						});
 					}, // end start
 					
 					stop : function(evt,ui){
 						scope.$apply(function(){
 							scope.$emit('angled.resizable.stop',{'ui': ui});
-							scope.obj.size = angular.copy(ui.size);
+							_obj.size = angular.copy(ui.size);
 						});
 					}, // end stop
 					
@@ -97,25 +97,25 @@ angular.module('angled-resizeit-directives',[])
 				
 				// set resizable object to a specified height | params = {id: I, height: Y}
 				scope.$on('angled.resizable.set.height',function(evt,params){
-					if(((angular.isDefined(params.id)) && (angular.equals(params.id,scope.obj.id))) && angular.isDefined(params.height))
+					if(((angular.isDefined(params.id)) && (angular.equals(params.id,_obj.id))) && angular.isDefined(params.height))
 						el.css('height',parseInt(params.height) + 'px');
 				}); // end on(angled.resizable.set.height)
 				
 				// set resizable object to a specified width | params = {id: I, width: X}
 				scope.$on('angled.resizable.set.width',function(evt,params){
-					if(((angular.isDefined(params.id)) && (angular.equals(params.id,scope.obj.id))) && angular.isDefined(params.width))
+					if(((angular.isDefined(params.id)) && (angular.equals(params.id,_obj.id))) && angular.isDefined(params.width))
 						el.css('width',parseInt(params.width) + 'px');
 				}); // end on(angled.resizable.set.width)
 				
 				// reset resizable object to original height | params = {id: I}
 				scope.$on('angled.resizable.reset.height',function(evt){
-					if(((angular.isDefined(params.id)) && (angular.equals(params.id,scope.obj.id))) && angular.isDefined(scope.obj.originalSize.height))
+					if(((angular.isDefined(params.id)) && (angular.equals(params.id,_obj.id))) && angular.isDefined(scope.obj.originalSize.height))
 						el.css('height',parseInt(scope.obj.originalSize.height) + 'px');
 				}); // end on(angled.resizable.reset.height)
 				
 				// reset resizable object to original width | params = {id: I}
 				scope.$on('angled.resizable.reset.width',function(evt){
-					if(((angular.isDefined(params.id)) && (angular.equals(params.id,scope.obj.id))) && angular.isDefined(scope.obj.originalSize.width))
+					if(((angular.isDefined(params.id)) && (angular.equals(params.id,_obj.id))) && angular.isDefined(scope.obj.originalSize.width))
 						el.css('height',parseInt(scope.obj.originalSize.width) + 'px');
 				}); // end on(angled.resizable.reset.width)
 			} // end link
