@@ -36,6 +36,8 @@ angular.module('angled-dragndrop-services',[])
 			/**
 			 * Get Draggable
 			 * Retrieves the saved draggable object.
+			 *
+			 * @return		mixed		object/null
 			 */
 			getDraggable : function(){
 				if(angular.isDefined(_draggable))
@@ -159,6 +161,7 @@ angular.module('angled-dragndrop-directives',['angled-dragndrop-services'])
 	      		// combine options and events
     	  		var options = angular.extend({},opts,evts);
       			el.draggable(options); // jQuery UI call
+      		} // end link
   		}; // end return
 	}]) // end angledDraggable
 
@@ -195,7 +198,9 @@ angular.module('angled-dragndrop-directives',['angled-dragndrop-services'])
 					drop : function(evt,ui){ // apply scope context
 						scope.$apply(function(){
 							// get the object draggalbe object being dropped and push a copy onto the droppable's array
-							scope.obj.dropped.push(angular.copy(angledDndSrv.getDraggable()));
+							var _dropped = angledDndSrv.getDraggable();
+							if(angular.isDefined(_dropped) && !angular.equals(_dropped,null))
+								scope.obj.dropped.push(angular.copy());
 							angledDndSrv.clean();
 
 							scope.$emit('angled.droppable.dropped',{obj: scope.obj});
@@ -204,7 +209,7 @@ angular.module('angled-dragndrop-directives',['angled-dragndrop-services'])
 
 					over : function(evt,ui){
 						scope.$apply(function(){
-							scope.$emit('angled.droppable.over')
+							scope.$emit('angled.droppable.over',{id: scope.obj.id});
 						});
 					} // end over
 				}; // end evts
