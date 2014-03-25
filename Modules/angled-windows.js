@@ -21,7 +21,7 @@
 
 angular.module('angled-windows-directives',['ngSanitize','ngAnimate','angled-dragndrop','angled-resizeit'])
 
-	.directive('angledWindow',['$animate','$sanitize',function($animate,$sanitize){
+	.directive('angledWindow',['$animate',function($animate){
 		return {
 			restrict : 'E',
 			transclude : true,
