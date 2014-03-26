@@ -28,6 +28,7 @@
 .angled-window-body-content {
   min-height: 18px;
   min-width: 220px;
+  height: 300px;
   overflow: scroll;
 }
 
@@ -36,7 +37,7 @@
 
 /** For animated transitions **/
 .angled-window.rolled-up, .angled-window.rolled-up-add.rolled-up-add-active, .angled-window.rolled-up-remove{
-  max-height: 45px;
+  max-height: 44px;
 }
 
 .angled-window.rolled-up-add, .angled-window.rolled-up-remove.rolled-up-remove-active {
@@ -45,3 +46,4 @@
 
 /** Appropriate mouse cursors **/
 .cursor-move { cursor: move; }
+.cursor-pointer { cursor: pointer; }
