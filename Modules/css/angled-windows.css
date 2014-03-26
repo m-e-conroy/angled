@@ -1,32 +1,13 @@
-.floating-window, div#windowBodyContent, div#windowBody, .floating-window > .panel  { /* fix for sudden margins when using resizeable with bootstrap */
+.angled-window, .angled-window-body, .angled-window-body-content, .angled-window > .panel  { /* fix for sudden margins when using resizeable with bootstrap */
   -webkit-box-sizing: content-box; /* Safari/Chrome, other WebKit */
 	-moz-box-sizing: content-box;    /* Firefox, other Gecko */
 	box-sizing: content-box;         /* Opera/IE 8+ */
 }
 
-.floating-window > .panel {
-  min-height: 135px;
-  min-width: 250px;
-  width: 300px;
-}
-div#windowBodyContent {
-  min-height: 18px;
-  min-width: 220px;
-}
-
-.window-title { font-size: 16px; }
-
-/** Appropriate mouse cursors **/
-.cursor-move { cursor: move; }
-
-/** Hide content falling outside of window **/
-.panel { overflow: hidden; }
-
-/** Scroll window content when necessary **/
-div#windowBodyContent { overflow: scroll; }
+.angled-window-title { font-size: 16px; }
 
 /** Window minimize and expansion transition **/
-.floating-window {
+.angled-window {
   max-height: 1000px;
   overflow: hidden;
   webkit-transition: max-height .4s ease;
@@ -35,10 +16,32 @@ div#windowBodyContent { overflow: scroll; }
   transition: max-height .4s ease;
 }
 
-.floating-window.rolled-up, .floating-window.rolled-up-add.rolled-up-add-active, .floating-window.rolled-up-remove{
+/** Minimum sizes for resizing / starting width **/
+.angled-window > .panel {
+  min-height: 135px;
+  min-width: 250px;
+  width: 300px;
+  overflow: hidden;
+}
+
+/** Minimum inside height and width, scroll content when needed **/
+.angled-window-body-content {
+  min-height: 18px;
+  min-width: 220px;
+  overflow: scroll;
+}
+
+/** Hide content falling outside of window 
+.panel { overflow: hidden; }**/
+
+/** For animated transitions **/
+.angled-window.rolled-up, .angled-window.rolled-up-add.rolled-up-add-active, .angled-window.rolled-up-remove{
   max-height: 46px;
 }
 
-.floating-window.rolled-up-add, .floating-window.rolled-up-remove.rolled-up-remove-active {
+.angled-window.rolled-up-add, .angled-window.rolled-up-remove.rolled-up-remove-active {
   max-height: 1000px;
 }
+
+/** Appropriate mouse cursors **/
+.cursor-move { cursor: move; }
