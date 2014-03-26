@@ -36,7 +36,7 @@
 
 /** For animated transitions **/
 .angled-window.rolled-up, .angled-window.rolled-up-add.rolled-up-add-active, .angled-window.rolled-up-remove{
-  max-height: 46px;
+  max-height: 45px;
 }
 
 .angled-window.rolled-up-add, .angled-window.rolled-up-remove.rolled-up-remove-active {
