@@ -65,20 +65,20 @@ angular.module('angled-resizeit-directives',[])
 							scope.$apply(function(){
 								_obj.originalSize = angular.copy(ui.size);
 								_obj.size = angular.copy(ui.size);
-								scope.$emit('angled.resizable.create',{obj: _obj});
+								scope.$emit('angled.resizable.created',{obj: _obj});
 							});
 						});
 					}, // end create
 					
 					start : function(evt,ui){
 						scope.$apply(function(){
-							scope.$emit('angled.resizable.start',{obj: _obj});
+							scope.$emit('angled.resizable.started',{obj: _obj});
 						});
 					}, // end start
 					
 					stop : function(evt,ui){
 						scope.$apply(function(){
-							scope.$emit('angled.resizable.stop',{'ui': ui});
+							scope.$emit('angled.resizable.stopped',{'ui': ui});
 							_obj.size = angular.copy(ui.size);
 						});
 					}, // end stop
