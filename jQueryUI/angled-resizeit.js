@@ -40,85 +40,92 @@ angular.module('angled-resizeit-directives',[])
 	.directive('angledResizable',['$timeout',function($timeout){
 		return {
 			restrict : 'A',
-			link : function(scope,el,attrs){
-				var _obj = {
-					el : null,
-					id : null,
-					originalSize : null, // {width,height}
-					size : null // {width,height}
-				};
-				
-				//=== Setup ===//
-				
-				_obj.el = el; // save the handle to the resizable element
-				
-				if(angular.isDefined(attrs.id))
-					_obj.id = attrs.id;
-					
-				// get jQuery UI options via the directive's attribute value
-				var opts = (angular.isDefined(attrs.angledResizable)) ? scope.$eval(attrs.angledResizable) : {};
-				
-				// set up events object
-				var evts = {
-					create : function(evt,ui){
-						$timeout(function(){
-							scope.$apply(function(){
-								_obj.originalSize = angular.copy(ui.size);
-								_obj.size = angular.copy(ui.size);
-								scope.$emit('angled.resizable.created',{obj: _obj});
-							});
-						});
-					}, // end create
-					
-					start : function(evt,ui){
-						scope.$apply(function(){
-							scope.$emit('angled.resizable.started',{obj: _obj});
-						});
-					}, // end start
-					
-					stop : function(evt,ui){
-						scope.$apply(function(){
-							scope.$emit('angled.resizable.stopped',{'ui': ui});
-							_obj.size = angular.copy(ui.size);
-						});
-					}, // end stop
-					
-					resize : function(evt,ui){
-						scope.$apply(function(){
-							scope.$emit('angled.resizable.resizing');
-						}); 
-					} // end resize
-				}; // end evts
-				
-				var options = angular.extend({},opts,evts);
-				el.resizable(options); // jQuery UI call
-				
-				//=== Listeners ===//
-				
-				// set resizable object to a specified height | params = {id: I, height: Y}
-				scope.$on('angled.resizable.set.height',function(evt,params){
-					if(((angular.isDefined(params.id)) && (angular.equals(params.id,_obj.id))) && angular.isDefined(params.height))
-						el.css('height',parseInt(params.height) + 'px');
-				}); // end on(angled.resizable.set.height)
-				
-				// set resizable object to a specified width | params = {id: I, width: X}
-				scope.$on('angled.resizable.set.width',function(evt,params){
-					if(((angular.isDefined(params.id)) && (angular.equals(params.id,_obj.id))) && angular.isDefined(params.width))
-						el.css('width',parseInt(params.width) + 'px');
-				}); // end on(angled.resizable.set.width)
-				
-				// reset resizable object to original height | params = {id: I}
-				scope.$on('angled.resizable.reset.height',function(evt){
-					if(((angular.isDefined(params.id)) && (angular.equals(params.id,_obj.id))) && angular.isDefined(scope.obj.originalSize.height))
-						el.css('height',parseInt(scope.obj.originalSize.height) + 'px');
-				}); // end on(angled.resizable.reset.height)
-				
-				// reset resizable object to original width | params = {id: I}
-				scope.$on('angled.resizable.reset.width',function(evt){
-					if(((angular.isDefined(params.id)) && (angular.equals(params.id,_obj.id))) && angular.isDefined(scope.obj.originalSize.width))
-						el.css('height',parseInt(scope.obj.originalSize.width) + 'px');
-				}); // end on(angled.resizable.reset.width)
-			} // end link
+			compile : function(){
+				return {
+					pre : function(scope,el,attrs){ // ~setup function
+						var _obj = {
+							el : null,
+							id : null,
+							originalSize : null, // {width,height}
+							size : null // {width,height}
+						};
+						
+						//=== Setup ===//
+						
+						_obj.el = el; // save the handle to the resizable element
+						
+						if(angular.isDefined(attrs.id))
+							_obj.id = attrs.id;
+							
+						// get jQuery UI options via the directive's attribute value
+						var opts = (angular.isDefined(attrs.angledResizable)) ? scope.$eval(attrs.angledResizable) : {};
+						
+						// set up events object
+						var evts = {
+							create : function(evt,ui){
+								$timeout(function(){
+									scope.$apply(function(){
+										_obj.originalSize = angular.copy(ui.size);
+										_obj.size = angular.copy(ui.size);
+										scope.$emit('angled.resizable.created',{obj: _obj});
+									});
+								});
+							}, // end create
+							
+							start : function(evt,ui){
+								scope.$apply(function(){
+									scope.$emit('angled.resizable.started',{obj: _obj});
+								});
+							}, // end start
+							
+							stop : function(evt,ui){
+								scope.$apply(function(){
+									scope.$emit('angled.resizable.stopped',{'ui': ui});
+									_obj.size = angular.copy(ui.size);
+								});
+							}, // end stop
+							
+							resize : function(evt,ui){
+								scope.$apply(function(){
+									scope.$emit('angled.resizable.resizing');
+								}); 
+							} // end resize
+						}; // end evts
+						
+						var options = angular.extend({},opts,evts);
+						el.resizable(options); // jQuery UI call
+						
+						//=== Listeners ===//
+						
+						// set resizable object to a specified height | params = {id: I, height: Y}
+						scope.$on('angled.resizable.set.height',function(evt,params){
+							if(((angular.isDefined(params.id)) && (angular.equals(params.id,_obj.id))) && angular.isDefined(params.height))
+								el.css('height',parseInt(params.height) + 'px');
+						}); // end on(angled.resizable.set.height)
+						
+						// set resizable object to a specified width | params = {id: I, width: X}
+						scope.$on('angled.resizable.set.width',function(evt,params){
+							if(((angular.isDefined(params.id)) && (angular.equals(params.id,_obj.id))) && angular.isDefined(params.width))
+								el.css('width',parseInt(params.width) + 'px');
+						}); // end on(angled.resizable.set.width)
+						
+						// reset resizable object to original height | params = {id: I}
+						scope.$on('angled.resizable.reset.height',function(evt){
+							if(((angular.isDefined(params.id)) && (angular.equals(params.id,_obj.id))) && angular.isDefined(scope.obj.originalSize.height))
+								el.css('height',parseInt(scope.obj.originalSize.height) + 'px');
+						}); // end on(angled.resizable.reset.height)
+						
+						// reset resizable object to original width | params = {id: I}
+						scope.$on('angled.resizable.reset.width',function(evt){
+							if(((angular.isDefined(params.id)) && (angular.equals(params.id,_obj.id))) && angular.isDefined(scope.obj.originalSize.width))
+								el.css('height',parseInt(scope.obj.originalSize.width) + 'px');
+						}); // end on(angled.resizable.reset.width)
+					}, // end pre
+					post : function(scope,el,attrs){ // ~link function
+
+					} // end post
+				}; // end return
+			} // end compile
 		}; // end return
 	}]); // end resizable
 	
