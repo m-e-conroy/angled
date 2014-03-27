@@ -12,16 +12,19 @@
  * 		* AngularJS ngAnimate 1.2.x
  * 		* AngularJS ngSanitize 1.2.x
  * 		* jQuery UI 1.10.x
- * 			* this library: jQueryUI/angled-dragndrop.js
- * 			* this library: jQueryUI/angled-resizeit.js
+ * 			* Angled library: jQueryUI/angled-dragndrop.js
+ * 			* Angled library: jQueryUI/angled-resizeit.js
  * 		* Angular UI Boostrap 0.10.x
  * 		* Bootstrap 3.1.x
- * 			* this library: Modules/css/angled-windows.css
+ * 			* Angled library: Modules/css/angled-windows.css
+ *		* Angled library:
+ *			* /angled-filters.js
+ *			* /Services/angled-helper-services.js
  */
 
-angular.module('angled-windows-directives',['ngSanitize','ngAnimate','angled-dragndrop','angled-resizeit','angled-filters'])
+angular.module('angled-windows-directives',['ngSanitize','ngAnimate','angled-dragndrop','angled-resizeit','angled-filters','angled-helper-services'])
 
-	.directive('angledWindow',['$animate',function($animate){
+	.directive('angledWindow',['$animate','angledHelperSrv',function($animate,helperSrv){
 		return {
 			restrict : 'E',
 			transclude : true,
@@ -36,13 +39,31 @@ angular.module('angled-windows-directives',['ngSanitize','ngAnimate','angled-dra
 			compile : function(tEl,tAttrs,transFn){
 				return {
 					pre : function(scope,el,attrs){ // ~object setup
+
 						//== Variables ==//
+
+						// id check and generation
+						if(angular.isUndefined(scope.id)){
+							var loop = true;
+							while(loop){
+								var id = helperSrv.randomStr(10);
+								if(angular.element('#' + id).length == 0){
+									el.attr('id',id); // set attribute element id
+									scope.id = id; // set scope id
+									loop = false; // end while loop
+								}
+							} // end while
+						}
 
 						scope.rolledUp = false;
 						scope.dragOpts = {
 							handle: 'div.panel-heading',
 							opacity: 0.75
 						}; // end dragOpts
+						scope.resizeOpts = {
+							handles: 'se',
+							alsoResize: '#windowBodyContent_' + scope.id
+						}; // end resizeOpts
 					}, // end pre
 					post : function(scope,el,attrs){ // ~link function
 						//=== Methods ===//
