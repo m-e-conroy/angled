@@ -55,9 +55,16 @@ angular.module('angled-windows-directives',['ngSanitize','ngAnimate','angled-dra
 							} // end while
 						}
 
+						// group check
+						if(angular.isUndefined(scope.grouping)){
+							el.attr('grouping','default');
+							scope.grouping = 'default';
+						}
+
 						// fix for template not rendering with {{id}} filled in
 						scope.$evalAsync(function(){
 							scope.id = el.attr('id');
+							scope.grouping = el.attr('grouping');
 						});
 
 						scope.rolledUp = false;
