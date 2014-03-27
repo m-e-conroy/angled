@@ -8,6 +8,7 @@
 
 /** Window minimize and expansion transition **/
 .angled-window {
+  position: absolute;
   max-height: 1000px;
   overflow: hidden;
   webkit-transition: max-height .4s ease;
