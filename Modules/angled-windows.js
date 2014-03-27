@@ -55,6 +55,11 @@ angular.module('angled-windows-directives',['ngSanitize','ngAnimate','angled-dra
 							} // end while
 						}
 
+						// fix for template not rendering with {{id}} filled in
+						scope.$evalAsync(function(){
+							scope.id = el.attr('id');
+						});
+
 						scope.rolledUp = false;
 						scope.dragOpts = {
 							handle: 'div.panel-heading',
@@ -66,6 +71,7 @@ angular.module('angled-windows-directives',['ngSanitize','ngAnimate','angled-dra
 						}; // end resizeOpts
 					}, // end pre
 					post : function(scope,el,attrs){ // ~link function
+
 						//=== Methods ===//
 				
 						/**
