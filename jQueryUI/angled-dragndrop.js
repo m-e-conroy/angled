@@ -98,69 +98,76 @@ angular.module('angled-dragndrop-directives',['angled-dragndrop-services'])
 	.directive('angledDraggable',['angledDndSrv',function(angledDndSrv){
 		return {
     		restrict : 'A',
-		    link : function(scope,el,attrs){
-		    	// draggable object properties
-		      	var _obj = {
-		        	id : null,
-        			content : '',
-        			associate : null,
-		        	group : null
-		      	};
-      			var placeholder = false;
-			    
-			    //=== Setup ===//
-			    
-			    _obj.content = el.html(); // save object content
-      	
-				if(angular.isDefined(attrs.id)) // save id if defined
-        			_obj.id = attrs.id;
-      			
-      			if(angular.isDefined(attrs.associate)) // save associated object
-      				_obj.associate = attrs.associate;
-      				
-	      		if(angular.isDefined(attrs.placeholder)) // set whether or not to show the place holder upon dragging the element
-    	    		placeholder = scope.$eval(attrs.placeholder);
-      
-      			// options for jQuery UI's draggable method
-      			var opts = (angular.isDefined(attrs.angledDraggable)) ? scope.$eval(attrs.angledDraggable) : {};
-      
-				if(angular.isDefined(attrs.group)){ // identify the draggable group if there is one
-    	    		_obj.group = attrs.group;
-        			opts.stack = '.' + attrs.group;
-      			}
-      
-	      		// event handlers
-    	  		var evts = {
-    	  			start : function(evt,ui){
-          				if(placeholder) // ui.helper is jQuery object
-            				ui.helper.wrap('<div class="angled-draggable-placeholder"></div>');
-          	
-						scope.$apply(function(){ // broadcast event in angular context, send object with event
-							angledDndSrv.setDraggable(_obj);
-            				scope.$emit('angled.draggable.started',{obj: _obj});
-          				}); // end $apply
-	        		}, // end start
-        
-	        		drag : function(evt){
-    	      			scope.$apply(function(){ // emit event in angular context
-        	    			scope.$emit('angled.draggable.dragging');
-          				}); // end $apply
-        			}, // end drag
-        
-	        		stop : function(evt,ui){
-    	      			if(placeholder)
-        	    			ui.helper.unwrap();
-          
-          				scope.$apply(function(){ // emit event in angular context
-            				scope.$emit('angled.draggable.stopped');
-	          			}); // end $apply
-    	    		} // end stop
-      			}; // end evts
-      
-	      		// combine options and events
-    	  		var options = angular.extend({},opts,evts);
-      			el.draggable(options); // jQuery UI call
-      		} // end link
+		    compile : function(){
+		    	return {
+		    		pre : function(scope,el,attrs){ // ~setup function
+				    	// draggable object properties
+				      	var _obj = {
+				        	id : null,
+		        			content : '',
+		        			associate : null,
+				        	group : null
+				      	};
+		      			var placeholder = false;
+					    
+					    //=== Setup ===//
+					    
+					    _obj.content = el.html(); // save object content
+		      	
+						if(angular.isDefined(attrs.id)) // save id if defined
+		        			_obj.id = attrs.id;
+		      			
+		      			if(angular.isDefined(attrs.associate)) // save associated object
+		      				_obj.associate = attrs.associate;
+		      				
+			      		if(angular.isDefined(attrs.placeholder)) // set whether or not to show the place holder upon dragging the element
+		    	    		placeholder = scope.$eval(attrs.placeholder);
+		      
+		      			// options for jQuery UI's draggable method
+		      			var opts = (angular.isDefined(attrs.angledDraggable)) ? scope.$eval(attrs.angledDraggable) : {};
+		      
+						if(angular.isDefined(attrs.group)){ // identify the draggable group if there is one
+		    	    		_obj.group = attrs.group;
+		        			opts.stack = '.' + attrs.group;
+		      			}
+		      
+			      		// event handlers
+		    	  		var evts = {
+		    	  			start : function(evt,ui){
+		          				if(placeholder) // ui.helper is jQuery object
+		            				ui.helper.wrap('<div class="angled-draggable-placeholder"></div>');
+		          	
+								scope.$apply(function(){ // broadcast event in angular context, send object with event
+									angledDndSrv.setDraggable(_obj);
+		            				scope.$emit('angled.draggable.started',{obj: _obj});
+		          				}); // end $apply
+			        		}, // end start
+		        
+			        		drag : function(evt){
+		    	      			scope.$apply(function(){ // emit event in angular context
+		        	    			scope.$emit('angled.draggable.dragging');
+		          				}); // end $apply
+		        			}, // end drag
+		        
+			        		stop : function(evt,ui){
+		    	      			if(placeholder)
+		        	    			ui.helper.unwrap();
+		          
+		          				scope.$apply(function(){ // emit event in angular context
+		            				scope.$emit('angled.draggable.stopped');
+			          			}); // end $apply
+		    	    		} // end stop
+		      			}; // end evts
+		      
+			      		// combine options and events
+		    	  		var options = angular.extend({},opts,evts);
+		      			el.draggable(options); // jQuery UI call
+		      		}, // end pre
+		      		post : function(scope,el,attrs){ // ~link function
+
+		      		} // end post
+		      	}; // end return
+		    } // end compile
   		}; // end return
 	}]) // end angledDraggable
 
@@ -180,41 +187,48 @@ angular.module('angled-dragndrop-directives',['angled-dragndrop-services'])
 	.directive('angledDroppable',['angledDndSrv',function(angledDndSrv){
 		return {
 			restrict : 'A',
-			link : function(scope,el,attrs){
-				var _obj = {
-					id : null,
-					dropped : [] // list of items dropped on droppable
-				};
-				
-				if(angular.isDefined(attrs.id)) // save id if defined
-					_obj.id = attrs.id;
-					
-				// setup the options object to pass to jQuery UI's draggable method
-				var opts = (angular.isDefined(attrs.angledDroppable)) ? scope.$eval(attrs.angledDroppable) : {};
+			compile : function(){
+				return {
+					pre : function(scope,el,attrs){ // ~setup function
+						var _obj = {
+							id : null,
+							dropped : [] // list of items dropped on droppable
+						};
+						
+						if(angular.isDefined(attrs.id)) // save id if defined
+							_obj.id = attrs.id;
+							
+						// setup the options object to pass to jQuery UI's draggable method
+						var opts = (angular.isDefined(attrs.angledDroppable)) ? scope.$eval(attrs.angledDroppable) : {};
 
-				var evts = {
-					drop : function(evt,ui){ // apply scope context
-						scope.$apply(function(){
-							// get the object draggalbe object being dropped and push a copy onto the droppable's array
-							var _dropped = angledDndSrv.getDraggable();
-							if(angular.isDefined(_dropped) && !angular.equals(_dropped,null))
-								_obj.dropped.push(angular.copy());
-							angledDndSrv.clean();
+						var evts = {
+							drop : function(evt,ui){ // apply scope context
+								scope.$apply(function(){
+									// get the object draggalbe object being dropped and push a copy onto the droppable's array
+									var _dropped = angledDndSrv.getDraggable();
+									if(angular.isDefined(_dropped) && !angular.equals(_dropped,null))
+										_obj.dropped.push(angular.copy());
+									angledDndSrv.clean();
 
-							scope.$emit('angled.droppable.dropped',{obj: _obj});
-						});
-					}, // end drop
+									scope.$emit('angled.droppable.dropped',{obj: _obj});
+								});
+							}, // end drop
 
-					over : function(evt,ui){
-						scope.$apply(function(){
-							scope.$emit('angled.droppable.over',{id: _obj.id});
-						});
-					} // end over
-				}; // end evts
-				
-				var options = angular.extend({},opts,evts);
-				el.droppable(options); // jQuery UI call
-			} // end link
+							over : function(evt,ui){
+								scope.$apply(function(){
+									scope.$emit('angled.droppable.over',{id: _obj.id});
+								});
+							} // end over
+						}; // end evts
+						
+						var options = angular.extend({},opts,evts);
+						el.droppable(options); // jQuery UI call
+					}, // end pre
+					post : function(scope,el,attrs){ // ~link function
+
+					} // end post
+				}; // end return
+			} // end compile
 		}; // end return
 	}]); // end angledDroppable
 	
