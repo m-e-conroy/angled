@@ -11,7 +11,7 @@
  angular.module('angled-storage.services',[])
 
  	.service('angledGenericStorageSrv',['$log',function($log){
- 		var storage = undefined;
+ 		var _storage = undefined;
 
  		/**
  		 * Log Error
@@ -31,7 +31,7 @@
  			try{
  				if(angular.isUndefined(s) || !angular.isObject(s))
  					throw "Failed to set storage, unknown storage type.";
- 				storage = s;
+ 				_storage = s;
  				return true;
  			}catch(e){ _logError(e); }
  			return false;
@@ -47,7 +47,7 @@
  				if(angular.isUndefined(key) || !angular.isString(key))
  					throw "Key is undefined.";
  				
- 				return angular.fromJson(storage.getItem(key));
+ 				return angular.fromJson(_storage.getItem(key));
  			}catch(e){ _logError(e); }
  			return undefined;
  		}; // end get
@@ -65,7 +65,7 @@
  				if(angular.isUndefined(data))
  					throw "Data is undefined.";
 
- 				storage.setItem(key,angular.toJson(data));
+ 				_storage.setItem(key,angular.toJson(data));
  				return true;
  			}catch(e){ _logError(e); }
  			return false;
@@ -81,7 +81,7 @@
  				if(angular.isUndefined(key) || !angular.isString(key))
  					throw "Key is undefined.";
  				
- 				storage.removeItem(key);
+ 				_storage.removeItem(key);
  				return true;
  			}catch(e){ _logError(e); }
  			return false;
@@ -98,7 +98,7 @@
  					throw "Index is undefined.";
 
  				i = parseInt(i);
- 				return storage.key(i);
+ 				return _storage.key(i);
  			}catch(e){ _logError(e); }
  			return undefined;
  		}; // end key
@@ -109,7 +109,7 @@
  		 */
  		this.clear : function(){
  			try{
- 				storage.clear();
+ 				_storage.clear();
  				return true;
  			}catch(e){ _logError(e); }
  			return false;
@@ -121,15 +121,15 @@
  		 */
  		this.length : function(){
  			try{
- 				return storage.length;
+ 				return _storage.length;
  			}catch(e){ _logError(e); }
  			return false;
  		}; // end length
  	}]) // end angledGenericStorageSrv
 
  	.factory('angledStorageSrv',['$window','$log','angledGenericStorageSrv',function($window,$log,storageSrv){
- 		var local = angular.isDefined($window.localStorage);
- 		var session = angular.isDefined($window.sessionStorage);
+ 		var _local = angular.isDefined($window.localStorage);
+ 		var _session = angular.isDefined($window.sessionStorage);
 
  		return {
  			/**
@@ -144,7 +144,7 @@
  				switch(type){
  					case 'l':
  					case 'local':
- 						if(local)
+ 						if(_local)
  							if(storageSrv.setStorage($window.localStorage))
  								return storageSrv; // return instance of angledGenericStorageSrv
  						else
@@ -155,7 +155,7 @@
  					case 's':
  					case 'session':
  					default:
- 						if(session)
+ 						if(_session)
  							if(storageSrv.setStorage($window.sessionStorage))
  								return storageSrv; // return instance of angledGenericStorageSrv
  						else
@@ -172,7 +172,7 @@
  			 * Returns a service who's storage is the localStorage, or undefined
  			 */
  			getLocal : function(){
- 				if(local)
+ 				if(_local)
  					if(storageSrv.setStorage($window.localStorage))
  						return storageSrv; // return instance of angledGenericStorageSrv
  				else
@@ -187,7 +187,7 @@
  			 * Returns a service who's storage is the sessionStorage, or undefined.
  			 */
  			getSession : function(){
- 				if(session)
+ 				if(_session)
  					if(storageSrv.setStorage($window.sessionStorage))
  						return storageSrv; // return instance of angledGenericStorageSrv
  				else
