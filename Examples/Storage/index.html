@@ -6,6 +6,8 @@
 
 		<script src="//code.angularjs.org/1.2.16/angular.min.js"></script>
 		<script src="//code.angularjs.org/1.2.16/angular-animate.min.js"></script>
+		<script src="//rawgithub.com/greensock/GreenSock-JS/1.11.7/src/minified/TweenMax.min.js"></script>
+		<script src="//rawgithub.com/Hendrixer/ng-Fx/v0.4.0/dist/ng-Fx.min.js"></script>
 		<script src="js/angled-helper.js"></script>
 		<script src="js/angled-storage.js"></script>
 		<script src="js/storageTest.js"></script>
@@ -39,7 +41,7 @@
 
 					<div class="row">
 						<div class="col-md-6">
-							<div ng-if="haveCode()">
+							<div ng-if="haveCode()" class="fx-zoom-up">
 								<p class="text-info">
 									<strong>Code:</strong> {{code}}
 								</p>
@@ -54,13 +56,13 @@
 							</div>
 						</div>
 						<div class="col-md-6">
-							<div ng-if="haveKeys()">
+							<div ng-if="haveKeys()" class="fx-zoom-up">
 								<h2>Saved Keys</h2>
 								<p class="text-info" ng-hide="stored.key == ''">
 									<strong>Storage Value:</strong> {{stored.key}} = {{stored.val}}
 								</p>
 								<ul>
-									<li ng-repeat="k in keys">
+									<li ng-repeat="k in keys" class="fx-fade-left">
 										<span class="text-info pointer" ng-click="getSavedValue(k)">{{k}}</span>
 									</li>
 								</ul>

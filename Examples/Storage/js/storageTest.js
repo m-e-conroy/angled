@@ -1,4 +1,4 @@
-angular.module('storageTest',['angled-storage.services','angled-helper.services'])
+angular.module('storageTest',['angled-storage.services','angled-helper.services','ngAnimate','fx.animations'])
 
 	.controller('storageTestCtrl',['$scope','$log','angledStorageSrv','angledHelperSrv',function($scope,$log,storageSrv,helperSrv){
 
