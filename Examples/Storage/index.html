@@ -1,0 +1,79 @@
+<!doctype html>
+<html ng-app="storageTest">
+	
+	<head>
+		<title>Storage Example</title>
+
+		<script src="//code.angularjs.org/1.2.16/angular.min.js"></script>
+		<script src="//code.angularjs.org/1.2.16/angular-animate.min.js"></script>
+		<script src="js/angled-helper.js"></script>
+		<script src="js/angled-storage.js"></script>
+		<script src="js/storageTest.js"></script>
+
+		<link href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" rel="stylesheet">
+
+		<style>
+			.pointer { cursor: pointer; }
+		</style>
+	</head>
+
+	<body ng-controller="storageTestCtrl">
+
+		<div class="container">
+			
+			<div class="row">
+				<div class="col-md-12">
+					<h1>Angled Storage Test</h1>
+				</div>
+			</div>
+			
+			<div class="row">
+				<div class="col-md-12">
+					<p class="text-muted">
+						Generate a random code and then save it to session storage.
+					</p>
+					<button class="btn btn-primary" ng-click="generateCode()">Generate Random Code</button> <button class="btn btn-default" ng-click="clearCode()">Clear Code</button>
+					<br><br>
+
+					<hr>
+
+					<div class="row">
+						<div class="col-md-6">
+							<div ng-if="haveCode()">
+								<p class="text-info">
+									<strong>Code:</strong> {{code}}
+								</p>
+								<ng-form name="storeFrm">
+									<div class="form-group">
+										<label for="key">Key Name</label>
+										<input class="form-control" type="text" ng-model="form.key" id="key" required>
+										<p class="help-block">Enter a key name to save the code with.</p>
+									</div>
+									<button class="btn btn-warning" ng-click="saveCode()" ng-disabled="storeFrm.$invalid">Save Code In Storage</button>
+								</ng-form>
+							</div>
+						</div>
+						<div class="col-md-6">
+							<div ng-if="haveKeys()">
+								<h2>Saved Keys</h2>
+								<p class="text-info" ng-hide="stored.key == ''">
+									<strong>Storage Value:</strong> {{stored.key}} = {{stored.val}}
+								</p>
+								<ul>
+									<li ng-repeat="k in keys">
+										<span class="text-info pointer" ng-click="getSavedValue(k)">{{k}}</span>
+									</li>
+								</ul>
+								<button class="btn btn-danger" ng-click="clean()">Clean Storage</button>
+							</div>
+						</div>
+					</div>
+
+				</div>
+			</div>
+
+		</div>
+
+	</body>
+
+</html>
