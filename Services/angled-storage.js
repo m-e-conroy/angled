@@ -197,3 +197,5 @@
  			} // end getSession
  		}; // end return
  	}]); // end angledStorageSrv
+
+angular.module('angled-storage',['angled-storage.services']);

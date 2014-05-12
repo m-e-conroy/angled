@@ -22,7 +22,7 @@
  *			* /Services/angled-helper-services.js
  */
 
-angular.module('angled-windows-directives',['ngSanitize','ngAnimate','angled-dragndrop','angled-resizeit','angled-filters','angled-helper-services'])
+angular.module('angled-windows.directives',['ngSanitize','ngAnimate','angled-dragndrop','angled-resizeit','angled-filters','angled-helper.services'])
 
 	.directive('angledWindow',['$animate','angledHelperSrv',function($animate,helperSrv){
 		return {
@@ -105,4 +105,4 @@ angular.module('angled-windows-directives',['ngSanitize','ngAnimate','angled-dra
 	}]); // end run
 	
 // declare main module
-angular.module('angled-windows',['angled-windows-directives']);
+angular.module('angled-windows',['angled-windows.directives']);

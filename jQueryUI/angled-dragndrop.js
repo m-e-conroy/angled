@@ -11,7 +11,7 @@
  * @date: 25 Mar 2014
  *
  */
-angular.module('angled-dragndrop-services',[])
+angular.module('angled-dragndrop.services',[])
 
 	.factory('angledDndSrv', [function(){
 
@@ -73,7 +73,7 @@ angular.module('angled-dragndrop-services',[])
  * 		* jQuery UI 1.10.x
  *  
  */
-angular.module('angled-dragndrop-directives',['angled-dragndrop-services'])
+angular.module('angled-dragndrop.directives',['angled-dragndrop.services'])
 
 	/**
 	 *	Angled Draggable
@@ -233,4 +233,4 @@ angular.module('angled-dragndrop-directives',['angled-dragndrop-services'])
 	}]); // end angledDroppable
 	
 // declare main module
-angular.module('angled-dragndrop',['angled-dragndrop-directives']);
+angular.module('angled-dragndrop',['angled-dragndrop.directives']);

@@ -13,7 +13,7 @@
  * 
  */
 
-angular.module('angled-resizeit-directives',[])
+angular.module('angled-resizeit.directives',[])
 
 	/**
 	 * Angled Resizable 
@@ -130,4 +130,4 @@ angular.module('angled-resizeit-directives',[])
 	}]); // end resizable
 	
 // declare main module
-angular.module('angled-resizeit',['angled-resizeit-directives']);
+angular.module('angled-resizeit',['angled-resizeit.directives']);
