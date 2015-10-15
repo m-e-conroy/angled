@@ -1,33 +1,41 @@
 /**
- * Angled Storage Service
+ * Angled Local & Session Storage Services
  *
- * Wrapper services for browser local, session and cookie storage.
+ * Wrapper services for browser local & session storage.
  *
  * @author: Michael E Conroy (michael.e.conroy@gmail.com)
  *		- http://codepen.io/m-e-conroy
  * @date: 8 May 2014
  *
+ * @dependencies
+ *		- $window
+ * 		- $log
  */
- angular.module('angled-storage.services',[])
+angular.module('angled-storage.localSession')
 
- 	.service('angledGenericStorageSrv',['$log',function($log){
- 		var _storage = undefined;
+	/**
+ 	 * Generic Storage Service
+ 	 * Provides the methods to access a data store (storage) no matter the
+ 	 * type of data storage (session,local)
+ 	 */
+ 	.service('angledGenericStorageSrvc',['$log',function($log){
+ 		var _storage = undefined; // session or local storage
 
  		/**
  		 * Log Error
  		 * Logs errors to the browser console.
  		 * @param	e 		Exception Object
  		 */
- 		var _logError = function(e){
+ 		var _logError = function _logError(e){
 			$log.error(e.name + ' (' + e.fileName + ':' + e.lineNumber + ') : ' + e.message);
  		}; // end logError
 
  		/**
  		 * Set Storage
- 		 * Set the service's storage object.
+ 		 * Set the service's storage object, either session or local.
  		 * @param	s 		object
  		 */
- 		this.setStorage = function(s){
+ 		this.setStorage = function setStorage(s){
  			try{
  				if(angular.isUndefined(s) || !angular.isObject(s))
  					throw "Failed to set storage, unknown storage type.";
@@ -42,7 +50,7 @@
  		 * Retrieve the value of the given key.
  		 * @param	key 	string
  		 */
- 		this.get = function(key){
+ 		this.get = function get(key){
  			try{
  				if(angular.isUndefined(key) || !angular.isString(key))
  					throw "Key is undefined.";
@@ -58,7 +66,7 @@
  		 * @param	key 	string
  		 * @param	data 	mixed
  		 */
- 		this.save = function(key,data){
+ 		this.save = function save(key,data){
  			try{
  				if(angular.isUndefined(key) || !angular.isString(key))
  					throw "Key is undefined.";
@@ -76,7 +84,7 @@
  		 * Delete the value of the given key from storage.
  		 * @param	key 	string
  		 */
- 		this.del = function(key){
+ 		this.del = function del(key){
  			try{
  				if(angular.isUndefined(key) || !angular.isString(key))
  					throw "Key is undefined.";
@@ -92,7 +100,7 @@
  		 * Retrieve the key given by the index i.
  		 * @param	i 		int
  		 */
- 		this.key = function(i){
+ 		this.key = function key(i){
  			try{
  				if(angular.isUndefined(i) || !angular.isNumber(i))
  					throw "Index is undefined.";
@@ -107,7 +115,7 @@
  		 * Clear
  		 * Clean out the storage by deleting all key/value pairs.
  		 */
- 		this.clear = function(){
+ 		this.clear = function clear(){
  			try{
  				_storage.clear();
  				return true;
@@ -119,15 +127,22 @@
  		 * Length
  		 * Returns the number of keys in storage.
  		 */
- 		this.length = function(){
+ 		this.length = function length(){
  			try{
  				return _storage.length;
  			}catch(e){ _logError(e); }
  			return false;
  		}; // end length
- 	}]) // end angledGenericStorageSrv
 
- 	.factory('angledStorageSrv',['$window','$log','angledGenericStorageSrv',function($window,$log,storageSrv){
+ 	}]) // end angledGenericStorageSrvc
+
+	/**
+	 * Storage Service
+	 * Creates a generic storage object based on the type of storage requested.  
+	 * Inject this service into your other services, controllers or directives.
+	 */
+ 	.factory('angledStorageSrvc',['$window','$log','angledGenericStorageSrvc',function($window,$log,genericStorageSrvc){
+ 		// check to see what storage types or supported in the browser
  		var _local = angular.isDefined($window.localStorage);
  		var _session = angular.isDefined($window.sessionStorage);
 
@@ -142,22 +157,24 @@
  			 */
  			get : function(type){
  				switch(type){
+ 					// local browser storage
  					case 'l':
  					case 'local':
  						if(_local)
- 							if(storageSrv.setStorage($window.localStorage))
- 								return storageSrv; // return instance of angledGenericStorageSrv
+ 							if(genericStorageSrvc.setStorage($window.localStorage))
+ 								return genericStorageSrvc; // return instance of angledGenericStorageSrvc
  						else
  							$log.error('Local storage is not supported.');
  						
  						break;
 
+ 					// session browser storage
  					case 's':
  					case 'session':
  					default:
  						if(_session)
- 							if(storageSrv.setStorage($window.sessionStorage))
- 								return storageSrv; // return instance of angledGenericStorageSrv
+ 							if(genericStorageSrvc.setStorage($window.sessionStorage))
+ 								return genericStorageSrvc; // return instance of angledGenericStorageSrvc
  						else
  							$log.error('Session storage is not supported');
 
@@ -173,8 +190,8 @@
  			 */
  			getLocal : function(){
  				if(_local)
- 					if(storageSrv.setStorage($window.localStorage))
- 						return storageSrv; // return instance of angledGenericStorageSrv
+ 					if(genericStorageSrvc.setStorage($window.localStorage))
+ 						return genericStorageSrvc; // return instance of angledGenericStorageSrvc
  				else
  					$log.error('Local storage is not supported.');
 
@@ -188,14 +205,13 @@
  			 */
  			getSession : function(){
  				if(_session)
- 					if(storageSrv.setStorage($window.sessionStorage))
- 						return storageSrv; // return instance of angledGenericStorageSrv
+ 					if(genericStorageSrvc.setStorage($window.sessionStorage))
+ 						return genericStorageSrvc; // return instance of angledGenericStorageSrvc
  				else
  					$log.error('Session storage is not supported');
 
  				return undefined;
  			} // end getSession
- 		}; // end return
- 	}]); // end angledStorageSrv
 
-angular.module('angled-storage',['angled-storage.services']);
+ 		}; // end return
+ 	}]); // end angledStorageSrvc

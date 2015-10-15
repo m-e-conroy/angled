@@ -15,9 +15,9 @@ angular.module('angled-filters',[])
 							a[a.length]= p + ":{ " + arguments.callee(t).join(", ") + "}";
 						}else{   
 							if(typeof t == "string"){
-								a[a.length] = [ p+ ": \"" + t.toString() + "\"" ];
+								a[a.length] = [ p + ": \"" + t.toString() + "\"" ];
 							}else{
-								a[a.length] = [ p+ ": " + t.toString()];
+								a[a.length] = [ p + ": " + t.toString()];
 							}
 						}
 					}
